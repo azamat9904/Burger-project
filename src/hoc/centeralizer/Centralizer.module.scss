@@ -1,0 +1,15 @@
+.Centralizer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Content{
+  display: flex;
+  flex-direction: column;
+
+  main{
+    flex:1;
+  }
+}
