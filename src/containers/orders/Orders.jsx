@@ -15,7 +15,7 @@ class Orders extends Component {
       .get("/orders.json")
       .then((response) => {
         const fetchedOrders = [];
-        Object.keys(response.data).map((key) => {
+        Object.keys(response.data).forEach((key) => {
           fetchedOrders.push({ id: key, ...response.data[key] });
         });
         this.setState({ loading: false, orders: fetchedOrders });

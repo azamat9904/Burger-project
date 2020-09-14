@@ -121,7 +121,7 @@ class BurgerBuilder extends Component {
 
     if (this.state.ingredients) {
       const ingredients = this.state.ingredients;
-      Object.keys(ingredients).forEach((key, i) => {
+      Object.keys(ingredients).forEach((key) => {
         disabledList[key] = ingredients[key] <= 0;
       });
 
