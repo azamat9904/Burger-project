@@ -5,13 +5,13 @@ import NavigationItem from "./navigation-item/NavigationItem";
 const navigationItems = [
   {
     link: "/",
-    active: true,
     text: "Burger Builder",
+    exact: true,
   },
   {
-    link: "/",
-    active: false,
-    text: "Checkout",
+    link: "/orders",
+    text: "Orders",
+    exact: false,
   },
 ];
 
@@ -24,6 +24,7 @@ const NavigationItems = () => {
             key={navigationItem.text + index}
             link={navigationItem.link}
             active={navigationItem.active}
+            exact={navigationItem.exact}
           >
             {navigationItem.text}
           </NavigationItem>
