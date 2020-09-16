@@ -16,6 +16,11 @@ class ContactData extends Component {
           placeholder: "Your name",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       street: {
         elementType: "input",
@@ -24,6 +29,11 @@ class ContactData extends Component {
           placeholder: "Street",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       zipCode: {
         elementType: "input",
@@ -32,6 +42,13 @@ class ContactData extends Component {
           placeholder: "ZIP code",
         },
         value: "",
+        validation: {
+          required: true,
+          minLength: 5,
+          maxLength: 5,
+        },
+        valid: false,
+        touched: false,
       },
       country: {
         elementType: "input",
@@ -40,6 +57,11 @@ class ContactData extends Component {
           placeholder: "Country",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       email: {
         elementType: "input",
@@ -48,6 +70,11 @@ class ContactData extends Component {
           placeholder: "Your email",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       deliiveryMethod: {
         elementType: "select",
@@ -57,11 +84,33 @@ class ContactData extends Component {
             { value: "cheapest", displayValue: "Cheapest" },
           ],
         },
-        value: "",
+        validation: {},
+        value: "fastests",
+        valid: true,
       },
     },
+    formIsValid: false,
     loading: false,
   };
+
+  checkValidity(value, rules) {
+    let isValid = true;
+
+    if (!rules) return;
+
+    if (rules.required) {
+      isValid = value.trim() !== "" && isValid;
+    }
+
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid;
+    }
+
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid;
+    }
+    return isValid;
+  }
 
   orderHandler = async (event) => {
     event.preventDefault();
@@ -92,11 +141,28 @@ class ContactData extends Component {
 
   inputChangedHandler = (event, key) => {
     const value = event.target.value;
+
+    const valid = this.checkValidity(
+      value,
+      this.state.formData[key].validation
+    );
+
+    let formIsValid = true;
+    Object.keys(this.state.formData).forEach((k) => {
+      formIsValid = this.state.formData[k].valid && formIsValid;
+    });
+
     const formData = {
       ...this.state.formData,
-      [key]: { ...this.state.formData[key], value },
+      [key]: {
+        ...this.state.formData[key],
+        value,
+        valid,
+        touched: true,
+      },
     };
-    this.setState({ formData: formData });
+
+    this.setState({ formData: formData, formIsValid: formIsValid });
   };
 
   render() {
@@ -106,6 +172,8 @@ class ContactData extends Component {
         elementType: this.state.formData[key].elementType,
         elementConfig: this.state.formData[key].elementConfig,
         value: this.state.formData[key].value,
+        valid: this.state.formData[key].valid,
+        touched: this.state.formData[key].touched,
       };
     });
 
@@ -117,6 +185,8 @@ class ContactData extends Component {
           value={element.value}
           key={element.key}
           changed={(event) => this.inputChangedHandler(event, element.key)}
+          invalid={!element.valid}
+          touched={element.touched}
         />
       );
     });
@@ -129,7 +199,11 @@ class ContactData extends Component {
         ) : (
           <form onSubmit={this.orderHandler}>
             {inputElements}
-            <Button btnType="Success" clicked={this.orderHandler}>
+            <Button
+              btnType="Success"
+              clicked={this.orderHandler}
+              disabled={!this.state.formIsValid}
+            >
               Order
             </Button>
           </form>
