@@ -3,8 +3,8 @@ import Button from "../../../components/ui/button/Button";
 import classes from "./ContactData.module.scss";
 import axios from "../../../axios-orders";
 import Spinner from "../../../components/ui/spinner/Spinner";
-import { withRouter } from "react-router-dom";
 import Input from "../../../components/ui/input/Input";
+import { connect } from "react-redux";
 
 class ContactData extends Component {
   state = {
@@ -212,4 +212,11 @@ class ContactData extends Component {
     );
   }
 }
-export default withRouter(ContactData);
+
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    price: state.totalPrice,
+  };
+};
+export default connect(mapStateToProps)(ContactData);
