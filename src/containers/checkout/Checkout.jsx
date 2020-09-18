@@ -3,6 +3,8 @@ import CheckoutSummary from "../../components/order/checkout-summary/CheckoutSum
 import { Route } from "react-router-dom";
 import ContactData from "../../containers/checkout/contact-data/ContactData";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import * as actions from "../../store/actions/index";
 
 class Checkout extends React.Component {
   checkoutContinuedHandler = () => {
@@ -13,8 +15,13 @@ class Checkout extends React.Component {
     this.props.history.goBack();
   };
 
+  componentDidMount() {
+    this.props.changePurchasingStatus(false);
+  }
   render() {
-    return (
+    const hasIngredients = this.props.ingredients !== null;
+    console.log(hasIngredients, this.props.ingredients);
+    return hasIngredients ? (
       <>
         <CheckoutSummary
           ingredients={this.props.ingredients}
@@ -26,14 +33,22 @@ class Checkout extends React.Component {
           component={ContactData}
         />
       </>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
+    ingredients: state.burgerState.ingredients,
   };
 };
 
-export default connect(mapStateToProps)(Checkout);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changePurchasingStatus: (isInit) => dispatch(actions.sendOrderInit(isInit)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

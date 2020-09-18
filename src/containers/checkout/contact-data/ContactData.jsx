@@ -5,7 +5,9 @@ import axios from "../../../axios-orders";
 import Spinner from "../../../components/ui/spinner/Spinner";
 import Input from "../../../components/ui/input/Input";
 import { connect } from "react-redux";
-
+import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+import * as actions from "../../../store/actions/index";
+import { Redirect } from "react-router-dom";
 class ContactData extends Component {
   state = {
     formData: {
@@ -90,7 +92,6 @@ class ContactData extends Component {
       },
     },
     formIsValid: false,
-    loading: false,
   };
 
   checkValidity(value, rules) {
@@ -112,7 +113,7 @@ class ContactData extends Component {
     return isValid;
   }
 
-  orderHandler = async (event) => {
+  orderHandler = (event) => {
     event.preventDefault();
     this.setState({
       loading: true,
@@ -130,13 +131,7 @@ class ContactData extends Component {
       orderData: formData,
     };
 
-    try {
-      await axios.post("/orders.json", order);
-      this.setState({ loading: false });
-      this.props.history.push({ pathname: "/" });
-    } catch (error) {
-      this.setState({ loading: false });
-    }
+    this.props.sendOrder(order);
   };
 
   inputChangedHandler = (event, key) => {
@@ -191,32 +186,48 @@ class ContactData extends Component {
       );
     });
 
+    const redirect = this.props.purchasing ? <Redirect to="/" /> : null;
     return (
-      <div className={classes.ContactData}>
-        <h4>Enter your contact data</h4>
-        {this.state.loading ? (
-          <Spinner />
-        ) : (
-          <form onSubmit={this.orderHandler}>
-            {inputElements}
-            <Button
-              btnType="Success"
-              clicked={this.orderHandler}
-              disabled={!this.state.formIsValid}
-            >
-              Order
-            </Button>
-          </form>
-        )}
-      </div>
+      <>
+        {redirect}
+        <div className={classes.ContactData}>
+          <h4>Enter your contact data</h4>
+          {this.props.loading ? (
+            <Spinner />
+          ) : (
+            <form onSubmit={this.orderHandler}>
+              {inputElements}
+              <Button
+                btnType="Success"
+                clicked={this.orderHandler}
+                disabled={!this.state.formIsValid}
+              >
+                Order
+              </Button>
+            </form>
+          )}
+        </div>
+      </>
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    price: state.totalPrice,
+    ingredients: state.burgerState.ingredients,
+    price: state.burgerState.totalPrice,
+    loading: state.orderState.loading,
+    purchasing: state.orderState.purchasing,
   };
 };
-export default connect(mapStateToProps)(ContactData);
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sendOrder: (orderData) => dispatch(actions.sendOrderStart(orderData)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(ContactData, axios));
