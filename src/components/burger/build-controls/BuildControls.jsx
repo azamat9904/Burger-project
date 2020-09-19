@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classes from "./BuildControls.module.scss";
 import BuildControl from "./build-control/BuildControl";
 
@@ -28,7 +28,9 @@ const BuildControls = ({
   price,
   disabled,
   ordered,
+  isAuth,
 }) => {
+
   return (
     <div className={classes.BuildControls}>
       <p>
@@ -48,7 +50,7 @@ const BuildControls = ({
         disabled={disabled}
         onClick={ordered}
       >
-        Order now
+        {isAuth ? "Order now" : "Authenticated to order"}
       </button>
     </div>
   );

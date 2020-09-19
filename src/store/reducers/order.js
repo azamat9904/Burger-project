@@ -5,6 +5,8 @@ const initialState = {
   loading: false,
   orderCompleted: false,
   purchasing: false,
+  isBurgerBuild: false,
+  redirectPath: "/",
 };
 
 const reducer = (state = initialState, action) => {
@@ -51,6 +53,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+      };
+    case actionTypes.SET_BURGER_BUILD_STATUS:
+      return {
+        ...state,
+        isBurgerBuild: action.status,
+      };
+    case actionTypes.SET_REDIRECT_PATH:
+      return {
+        ...state,
+        redirectPath: action.path,
       };
     default:
       return state;

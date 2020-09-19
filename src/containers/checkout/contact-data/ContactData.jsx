@@ -131,7 +131,7 @@ class ContactData extends Component {
       orderData: formData,
     };
 
-    this.props.sendOrder(order);
+    this.props.sendOrder(order, this.props.token);
   };
 
   inputChangedHandler = (event, key) => {
@@ -218,12 +218,14 @@ const mapStateToProps = (state) => {
     price: state.burgerState.totalPrice,
     loading: state.orderState.loading,
     purchasing: state.orderState.purchasing,
+    token: state.authState.token,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendOrder: (orderData) => dispatch(actions.sendOrderStart(orderData)),
+    sendOrder: (orderData, token) =>
+      dispatch(actions.sendOrderStart(orderData, token)),
   };
 };
 

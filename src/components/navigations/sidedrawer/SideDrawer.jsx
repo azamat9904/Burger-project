@@ -5,7 +5,7 @@ import Backdrop from "../../ui/backdrop/Backdrop";
 
 import classes from "./SideDrawer.module.scss";
 
-const SideDrawer = ({ closed, open }) => {
+const SideDrawer = ({ closed, open, isAuth, onSetRedirectPath }) => {
   let attachedClasses = [classes.SideDrawer, classes.Close];
 
   if (open) attachedClasses = [classes.SideDrawer, classes.Open];
@@ -18,7 +18,10 @@ const SideDrawer = ({ closed, open }) => {
           <Logo />
         </div>
         <nav>
-          <NavigationItems />
+          <NavigationItems
+            isAuthenticated={isAuth}
+            onSetRedirectPath={onSetRedirectPath}
+          />
         </nav>
       </div>
     </>

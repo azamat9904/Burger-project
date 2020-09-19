@@ -29,11 +29,11 @@ export const sendOrderInit = (purchasing) => {
   };
 };
 
-export const sendOrderStart = (orderData) => {
+export const sendOrderStart = (orderData, token) => {
   return (dispatch) => {
     dispatch(sendOrderLoading());
     axios
-      .post("/orders.json", orderData)
+      .post("/orders.json?auth=" + token, orderData)
       .then(({ data }) => {
         dispatch(sendOrderSuccess(data.name, orderData));
         dispatch(sendOrderInit(true));
@@ -62,19 +62,32 @@ export const fetchOrdersFailed = (error) => {
   };
 };
 
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
   return (dispatch) => {
     dispatch(fetchOrderInit());
     axios
-      .get("/orders.json")
+      .get("/orders.json?auth=" + token)
       .then((response) => {
         const myOrders = [];
         Object.keys(response.data).forEach((key) => {
           myOrders.push({ id: key, ...response.data[key] });
         });
-
         dispatch(fetchOrdersSuccess(myOrders));
       })
       .catch((error) => dispatch(fetchOrdersFailed(error)));
+  };
+};
+
+export const setBurgerBuildStatus = (status) => {
+  return {
+    type: actionTypes.SET_BURGER_BUILD_STATUS,
+    status,
+  };
+};
+
+export const setRedirectPath = (path) => {
+  return {
+    type: actionTypes.SET_REDIRECT_PATH,
+    path,
   };
 };

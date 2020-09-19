@@ -10,4 +10,8 @@ export {
   sendOrderSuccess,
   sendOrderInit,
   fetchOrders,
+  setBurgerBuildStatus,
+  setRedirectPath,
 } from "./order";
+
+export { auth, logout, authCheckState } from "./auth";
