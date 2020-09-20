@@ -20,7 +20,6 @@ class Checkout extends React.Component {
   }
   render() {
     const hasIngredients = this.props.ingredients !== null;
-    console.log(hasIngredients, this.props.ingredients);
     return hasIngredients ? (
       <>
         <CheckoutSummary

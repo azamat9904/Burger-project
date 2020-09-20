@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from "../../../store/actions/index";
 import { Redirect } from "react-router-dom";
+import { checkValidity } from "../../../shared/utils";
+
 class ContactData extends Component {
   state = {
     formData: {
@@ -74,6 +76,7 @@ class ContactData extends Component {
         value: "",
         validation: {
           required: true,
+          isEmail: true,
         },
         valid: false,
         touched: false,
@@ -93,25 +96,6 @@ class ContactData extends Component {
     },
     formIsValid: false,
   };
-
-  checkValidity(value, rules) {
-    let isValid = true;
-
-    if (!rules) return;
-
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
-  }
 
   orderHandler = (event) => {
     event.preventDefault();
@@ -137,10 +121,7 @@ class ContactData extends Component {
   inputChangedHandler = (event, key) => {
     const value = event.target.value;
 
-    const valid = this.checkValidity(
-      value,
-      this.state.formData[key].validation
-    );
+    const valid = checkValidity(value, this.state.formData[key].validation);
 
     let formIsValid = true;
     Object.keys(this.state.formData).forEach((k) => {

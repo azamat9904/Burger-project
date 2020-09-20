@@ -51,7 +51,7 @@ const NavigationItems = ({ isAuthenticated, onSetRedirectPath }) => {
           <>
             {show && (
               <NavigationItem
-                key={navigationItem.text + index}
+                key={navigationItem.text}
                 link={navigationItem.link}
                 active={navigationItem.active}
                 exact={navigationItem.exact}

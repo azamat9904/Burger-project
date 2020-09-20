@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classes from "./BuildControls.module.scss";
 import BuildControl from "./build-control/BuildControl";
 
@@ -30,7 +30,6 @@ const BuildControls = ({
   ordered,
   isAuth,
 }) => {
-
   return (
     <div className={classes.BuildControls}>
       <p>
